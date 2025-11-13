@@ -1,0 +1,307 @@
+/* Tailwind base (requires tailwindcss + postcss setup). If you haven't installed Tailwind yet, see README below. */
+@import 'tailwindcss';
+/* ngx-toastr styles - load directly from node_modules to avoid package exports issues */
+@import '../../../node_modules/ngx-toastr/toastr.css';
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+  background-color: #f3f4f6; /* light gray */
+  font-family: Manrope, sans-serif;
+}
+
+/* Ensure interactive controls show pointer cursor on hover for better affordance */
+/* Buttons and common button-like elements: pointer cursor, hover opacity and transition */
+button,
+.btn,
+a.button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover,
+.btn:hover,
+a.button:hover {
+  opacity: 0.7;
+}
+
+/* Make native selects show pointer on hover for consistent affordance */
+select,
+select:hover {
+  cursor: pointer;
+}
+
+select {
+  padding: 12px;
+}
+
+/* Color variables for light/dark theme */
+:root {
+  --bg: #f3f4f6;
+  --page-bg: #f1f1f1;
+  --text: #111827;
+  --muted: #6b7280;
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --btn-bg: #ffffff;
+  --btn-text: #111827;
+  --link: #2563eb;
+  --btn-primary: #f1f1f1;
+  --border-primary: #ececec;
+  --color-secondary: #e24744 !important;
+}
+.dark {
+  --bg: #272729;
+  --page-bg: #272729;
+  --text: #e6eef8;
+  --muted: #9aa6b2;
+  --header-bg: #1d1d1f;
+  --card-bg: #091424;
+  --border: #163246;
+  --btn-bg: #28282a;
+  --btn-text: #e6eef8;
+  --link: #60a5fa;
+  --border-primary: #262628;
+  --btn-primary: #28282a;
+}
+.dark input::placeholder {
+  color: var(--muted);
+}
+
+textarea::placeholder {
+  color: var(--muted);
+}
+
+/* Apply variables to common elements */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+header {
+  background-color: var(--header-bg) !important;
+  color: var(--text);
+}
+
+input {
+  background-color: var(--btn-primary);
+  border-radius: 8px;
+  border: none;
+}
+
+textarea {
+  background-color: var(--btn-primary);
+  border-radius: 8px;
+  border: none;
+  min-height: 120px;
+}
+
+textarea::-webkit-scrollbar {
+  display: none;
+}
+
+button {
+  background-color: var(--btn-primary);
+  border-color: var(--border-primary);
+  border-width: 1px;
+  border-radius: 8px;
+}
+
+* {
+  transition: 0.3s all;
+}
+
+input:focus-visible {
+  outline: none;
+  border: 1px;
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+select {
+  border-color: var(--border-primary);
+  background-color: var(--page-bg);
+  padding: 8px;
+  text-transform: capitalize;
+  border-radius: 8px;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Task form styling: replace arbitrary Tailwind utility classes with semantic classes */
+.task-form {
+  padding: 1rem; /* p-4 */
+  margin-bottom: 1rem; /* mb-4 */
+  background-color: var(--header-bg);
+  border: 1px solid var(--border-primary);
+  border-radius: 1rem; /* rounded-2xl */
+}
+
+.task-input {
+  width: 100%;
+  padding: 0.5rem; /* p-2 */
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background-color: var(--card-bg);
+  box-sizing: border-box;
+}
+
+.task-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+  border-color: var(--link);
+}
+
+/* Task list & column styles */
+.column-area {
+  min-height: 300px;
+  border-radius: 0.5rem;
+  background: transparent;
+  height: 100%;
+}
+
+.task-card {
+  padding: 0.5rem; /* p-2 */
+  margin-bottom: 0.5rem; /* mb-2 */
+  border: 1px solid var(--border-primary);
+  background-color: var(--header-bg);
+  border-radius: 0.75rem; /* rounded-xl */
+}
+
+.task-desc {
+  font-size: 1rem; /* text-md */
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 2px solid var(--border-primary);
+  padding-bottom: 0.5rem;
+  width: 100%;
+}
+
+/* Header and profile menu */
+.header-inner {
+  background-color: var(--header-bg);
+}
+
+.profile-button {
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.375rem;
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  border: 1px solid var(--border-primary);
+  background-color: var(--btn-primary);
+}
+
+.profile-menu {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 12rem; /* w-48 */
+  border: 1px solid var(--border-primary);
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 18px rgba(3, 7, 18, 0.08);
+  z-index: 20;
+  padding: 0.5rem;
+  background-color: var(--header-bg);
+}
+
+/* Dialog / modal panel */
+.dialog {
+  display: block;
+}
+
+.dialog-panel {
+  border: 1px solid var(--border-primary);
+  background-color: var(--header-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 12px 34px rgba(3, 7, 18, 0.08);
+  width: min(95%, 420px);
+}
+
+/* Utility for focus accent using theme color */
+.focus-accent:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(226, 71, 68, 0.08);
+}
+
+/* Accent button using theme color */
+.btn-accent {
+  background-color: var(--color-secondary);
+  border-color: transparent;
+}
+
+/* Panels and tables */
+.panel {
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: var(--header-bg);
+  border: 1px solid var(--border-primary);
+}
+
+.panel-form {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.data-table {
+  background-color: var(--header-bg);
+  min-width: 600px;
+}
+
+.row-sep {
+  border-top: 1px solid var(--page-bg);
+}
+
+/* page main */
+.page-main {
+  padding: 2rem;
+  padding-top: 5rem; /* pt-20 */
+  background-color: var(--header-bg);
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* data-table variant that uses page-bg */
+.data-table--page {
+  background-color: var(--page-bg);
+}
+
+/* row separator variant for header background color */
+.row-sep--header {
+  border-top-color: var(--header-bg);
+}
+
+/* page-main variant that uses page-bg */
+.page-main--page {
+  background-color: var(--page-bg);
+}
+
+/* Progress bar */
+.progress-track {
+  width: 100%;
+  background-color: var(--header-bg);
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.progress-fill {
+  height: 0.5rem;
+  background-color: var(--color-secondary);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+:focus-visible {
+  outline: none;
+}

@@ -1,0 +1,114 @@
+<!-- Toolbar: search, category, sort -->
+<div
+  class="flex flex-col md:flex-row items-center gap-3 mb-3 task-form justify-between"
+>
+  <input
+    [(ngModel)]="searchQuery"
+    placeholder="Search tasks..."
+    class="px-3 py-2 rounded border w-full max-w-sm"
+  />
+  <div
+    class="flex gap-2 w-full md:w-auto justify-center md:justify-end max-w-full overflow-x-auto hide-scrollbar"
+  >
+    <select [(ngModel)]="selectedCategory" class="px-3 py-2 rounded border">
+      <option value="all">All categories</option>
+      <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+    </select>
+    <select
+      *ngIf="sortKey === 'status'"
+      [(ngModel)]="selectedStatus"
+      class="px-3 py-2 rounded border"
+    >
+      <option value="all">All statuses</option>
+      <option value="todo">To do</option>
+      <option value="in-progress">In progress</option>
+      <option value="done">Done</option>
+    </select>
+    <select [(ngModel)]="sortKey" class="px-3 py-2 rounded border">
+      <option value="status">Status</option>
+      <option value="category">Category</option>
+    </select>
+    <button (click)="toggleSortDir()" class="px-3 py-2 border rounded">
+      {{ sortDir === 'asc' ? '↑' : '↓' }}
+    </button>
+  </div>
+</div>
+
+<div class="grid gap-4 sm:grid-cols-3">
+  <div *ngFor="let column of columns" class="p-2">
+    <h3 class="font-semibold mb-2 text-center">{{ column.title }}</h3>
+    <div
+      class="column-area"
+      [class.cursor-move]="isTransferAllowed()"
+      [class.cursor-default]="!isTransferAllowed()"
+      (dragover)="$event.preventDefault()"
+      (drop)="onDrop($event, column.key)"
+    >
+      <div
+        *ngFor="
+          let t of tasks
+            | taskSearch : searchQuery
+            | statusFilter : selectedStatus
+            | categoryFilter : selectedCategory
+            | columnFilter : column.key
+            | taskSort : sortKey : sortDir;
+          let i = index
+        "
+        class="task-card"
+        [draggable]="isTransferAllowed()"
+        (dragstart)="onDragStart($event, t)"
+      >
+        <div class="flex justify-between items-center flex-col gap-1">
+          <span class="text-sm">{{ t.title }}</span>
+          <span class="task-desc min-h-20">
+            {{ t.description }}
+          </span>
+          <div
+            class="text-sm text-gray-500 flex justify-between w-full items-end"
+          >
+            {{ t.category }}
+            <div class="flex gap-2" *ngIf="auth.getUserRole() !== 'viewer'">
+              <button
+                (click)="toggleDone(t)"
+                class="px-1 py-1 border rounded-2xl flex items-center gap-1"
+              >
+                <svg
+                  width="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  class="transition-all duration-300"
+                  xmlns="http://www.w3.org/2000/svg"
+                  [style.transform]="
+                    t.status === 2 ? 'rotate(90deg)' : 'rotate(-90deg)'
+                  "
+                >
+                  <path
+                    d="M11.3335 6.61434L10.1686 7.78965C9.23966 8.72694 8.77518 9.19559 8.20905 9.26775C8.07034 9.28543 7.92998 9.28543 7.79127 9.26775C7.22515 9.19559 6.76067 8.72694 5.8317 7.78965L4.66683 6.61434M14.6668 7.94767C14.6668 11.6296 11.6821 14.6143 8.00016 14.6143C4.31826 14.6143 1.3335 11.6296 1.3335 7.94767C1.3335 4.26577 4.31826 1.28101 8.00016 1.28101C11.6821 1.28101 14.6668 4.26577 14.6668 7.94767Z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+              <button
+                (click)="remove(t)"
+                class="px-1 py-1 border rounded-2xl text-[#E24744]"
+              >
+                <svg
+                  width="16"
+                  viewBox="0 0 16 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.4317 9.64941L14.0507 9.73556L14.0507 9.73556L13.4317 9.64941ZM13.213 11.2203L13.8321 11.3064L13.8321 11.3064L13.213 11.2203ZM2.78826 11.2203L3.4073 11.1341L3.4073 11.1341L2.78826 11.2203ZM2.56965 9.64942L1.95062 9.73557L1.95062 9.73557L2.56965 9.64942ZM5.65369 17.1139L5.4107 17.6897L5.4107 17.6897L5.65369 17.1139ZM3.39655 14.4668L3.98321 14.2512L3.98321 14.2512L3.39655 14.4668ZM12.6047 14.4668L13.1914 14.6823L13.1914 14.6823L12.6047 14.4668ZM10.3476 17.1139L10.1046 16.538L10.1046 16.538L10.3476 17.1139ZM2.78952 6.44072C2.75687 6.09709 2.45183 5.84499 2.1082 5.87764C1.76457 5.91029 1.51247 6.21532 1.54512 6.55895L2.78952 6.44072ZM14.4562 6.55895C14.4888 6.21532 14.2367 5.91029 13.8931 5.87764C13.5495 5.84499 13.2444 6.09709 13.2118 6.44072L14.4562 6.55895ZM14.6673 5.45817C15.0125 5.45817 15.2923 5.17835 15.2923 4.83317C15.2923 4.48799 15.0125 4.20817 14.6673 4.20817V5.45817ZM1.33398 4.20817C0.988806 4.20817 0.708984 4.48799 0.708984 4.83317C0.708984 5.17835 0.988806 5.45817 1.33398 5.45817V4.20817ZM5.70898 13.9998C5.70898 14.345 5.98881 14.6248 6.33398 14.6248C6.67916 14.6248 6.95898 14.345 6.95898 13.9998H5.70898ZM6.95898 7.33317C6.95898 6.98799 6.67916 6.70817 6.33398 6.70817C5.98881 6.70817 5.70898 6.98799 5.70898 7.33317H6.95898ZM9.04232 13.9998C9.04232 14.345 9.32214 14.6248 9.66732 14.6248C10.0125 14.6248 10.2923 14.345 10.2923 13.9998H9.04232ZM10.2923 7.33317C10.2923 6.98799 10.0125 6.70817 9.66732 6.70817C9.32214 6.70817 9.04232 6.98799 9.04232 7.33317H10.2923ZM11.334 4.83317V5.45817H11.959V4.83317H11.334ZM4.66732 4.83317H4.04232V5.45817H4.66732V4.83317ZM13.4317 9.64941L12.8126 9.56326L12.594 11.1341L13.213 11.2203L13.8321 11.3064L14.0507 9.73556L13.4317 9.64941ZM2.78826 11.2203L3.4073 11.1341L3.18869 9.56327L2.56965 9.64942L1.95062 9.73557L2.16923 11.3064L2.78826 11.2203ZM8.00065 17.3332V16.7082C6.72635 16.7082 6.27185 16.6963 5.89668 16.538L5.65369 17.1139L5.4107 17.6897C6.07494 17.97 6.83863 17.9582 8.00065 17.9582V17.3332ZM2.78826 11.2203L2.16923 11.3064C2.40232 12.9813 2.52904 13.9179 2.8099 14.6823L3.39655 14.4668L3.98321 14.2512C3.76028 13.6445 3.64941 12.8738 3.4073 11.1341L2.78826 11.2203ZM5.65369 17.1139L5.89668 16.538C5.12798 16.2137 4.41312 15.4213 3.98321 14.2512L3.39655 14.4668L2.8099 14.6823C3.32207 16.0763 4.2357 17.1939 5.4107 17.6897L5.65369 17.1139ZM13.213 11.2203L12.594 11.1341C12.3519 12.8738 12.241 13.6445 12.0181 14.2512L12.6047 14.4668L13.1914 14.6823C13.4723 13.9179 13.599 12.9813 13.8321 11.3064L13.213 11.2203ZM8.00065 17.3332V17.9582C9.16267 17.9582 9.92636 17.97 10.5906 17.6897L10.3476 17.1139L10.1046 16.538C9.72945 16.6963 9.27496 16.7082 8.00065 16.7082V17.3332ZM12.6047 14.4668L12.0181 14.2512C11.5882 15.4213 10.8733 16.2137 10.1046 16.538L10.3476 17.1139L10.5906 17.6897C11.7656 17.1939 12.6792 16.0763 13.1914 14.6823L12.6047 14.4668ZM2.56965 9.64942L3.18869 9.56327C3.00358 8.2332 2.86536 7.23902 2.78952 6.44072L2.16732 6.49984L1.54512 6.55895C1.62414 7.39064 1.76699 8.41613 1.95062 9.73557L2.56965 9.64942ZM13.4317 9.64941L14.0507 9.73556C14.2343 8.41612 14.3772 7.39064 14.4562 6.55895L13.834 6.49984L13.2118 6.44072C13.1359 7.23902 12.9977 8.23319 12.8126 9.56326L13.4317 9.64941ZM14.6673 4.83317V4.20817H1.33398V4.83317V5.45817H14.6673V4.83317ZM6.33398 13.9998H6.95898V7.33317H6.33398H5.70898V13.9998H6.33398ZM9.66732 13.9998H10.2923V7.33317H9.66732H9.04232V13.9998H9.66732ZM11.334 3.99984H10.709V4.83317H11.334H11.959V3.99984H11.334ZM11.334 4.83317V4.20817H4.66732V4.83317V5.45817H11.334V4.83317ZM4.66732 4.83317H5.29232V3.99984H4.66732H4.04232V4.83317H4.66732ZM8.00065 0.666504V1.2915C9.49642 1.2915 10.709 2.50407 10.709 3.99984H11.334H11.959C11.959 1.81371 10.1868 0.0415039 8.00065 0.0415039V0.666504ZM8.00065 0.666504V0.0415039C5.81452 0.0415039 4.04232 1.81371 4.04232 3.99984H4.66732H5.29232C5.29232 2.50407 6.50488 1.2915 8.00065 1.2915V0.666504Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

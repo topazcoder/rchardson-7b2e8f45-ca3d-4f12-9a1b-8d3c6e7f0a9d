@@ -1,0 +1,36 @@
+<!-- Backdrop -->
+<div class="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
+  <div
+    role="dialog"
+    aria-modal="true"
+    class="dialog dialog-panel mx-4"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="p-5">
+      <form (ngSubmit)="submit($event)">
+        <label class="block mb-2 text-sm">Email</label>
+        <input
+          [(ngModel)]="email"
+          name="email"
+          type="email"
+          class="border p-2 w-full mb-3 rounded"
+        />
+
+        <label class="block mb-2 text-sm">Password</label>
+        <input
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          class="border p-2 w-full mb-3 rounded"
+        />
+
+        <div class="flex gap-2 justify-end">
+          <button class="px-4 py-2 rounded text-white btn-accent">Login</button>
+          <button (click)="register($event)" class="px-4 py-2 rounded">
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

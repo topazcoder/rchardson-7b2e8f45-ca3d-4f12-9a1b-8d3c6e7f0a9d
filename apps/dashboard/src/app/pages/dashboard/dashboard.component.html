@@ -1,0 +1,22 @@
+<app-header></app-header>
+<main class="page-main page-main--page">
+  <div class="max-w-6xl mx-auto">
+    <app-task-form
+      *ngIf="canCreate"
+      (create)="onCreate($event)"
+    ></app-task-form>
+
+    <div class="mb-4">
+      <div class="progress-track">
+        <div [style.width.%]="progress" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <app-task-list
+      [tasks]="tasks"
+      (update)="onUpdate($event)"
+      (delete)="onDelete($event)"
+      (reorder)="onReorder($event)"
+    ></app-task-list>
+  </div>
+</main>

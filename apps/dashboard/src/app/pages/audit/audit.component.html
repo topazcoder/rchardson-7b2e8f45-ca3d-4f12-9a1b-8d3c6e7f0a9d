@@ -1,0 +1,41 @@
+<app-header></app-header>
+
+<main class="page-main">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Audit Log</h1>
+
+    <div *ngIf="loading" class="text-gray-600">Loading...</div>
+
+    <div class="overflow-x-auto">
+      <table
+        *ngIf="!loading && !error"
+        class="w-full table-auto border-collapse rounded-2xl data-table data-table--page"
+      >
+        <thead>
+          <tr class="text-left">
+            <th class="px-2 py-2 text-center">Actor</th>
+            <th class="px-2 py-2 text-center">Action</th>
+            <th class="px-2 py-2 text-center">When</th>
+            <th class="px-2 py-2 text-center">Meta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of audits" class="row-sep row-sep--header">
+            <td class="px-2 py-2 text-center">
+              {{ a.actor?.username || a.actor?.email || '—' }}
+            </td>
+            <td class="px-2 py-2 text-sm text-center">
+              {{ a.createdAt | date : 'medium' }}
+            </td>
+            <td class="px-2 py-2 text-center">{{ a.action }}</td>
+            <td class="px-2 py-2 text-xs text-center1">
+              <pre class="whitespace-pre-wrap">{{
+                a.meta ? (a.meta | json) : '—'
+              }}</pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>

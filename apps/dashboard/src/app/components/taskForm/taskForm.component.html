@@ -1,0 +1,38 @@
+<form (ngSubmit)="submit()" class="task-form">
+  <div class="mb-2">
+    <input
+      [(ngModel)]="title"
+      name="title"
+      placeholder="Task title"
+      class="px-3 py-2 rounded border w-full"
+      required
+    />
+  </div>
+  <div class="mb-2">
+    <textarea
+      [(ngModel)]="description"
+      name="description"
+      placeholder="Task Description"
+      class="px-3 py-2 rounded border w-full"
+    ></textarea>
+  </div>
+  <div class="mb-2">
+    <input
+      [(ngModel)]="category"
+      name="category"
+      placeholder="Category (Work, Personal)"
+      class="px-3 py-2 rounded border w-full"
+    />
+  </div>
+  <div class="flex gap-2 justify-end">
+    <button
+      class="px-3 py-2 text-white rounded"
+      style="background-color: #e24744"
+    >
+      Add
+    </button>
+    <button type="button" class="px-3 py-2 rounded" (click)="clear()">
+      Clear
+    </button>
+  </div>
+</form>
